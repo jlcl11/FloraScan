@@ -1,0 +1,46 @@
+# Xcode
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Packages/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Secrets - NEVER commit
+**/Secrets.plist
+
+# Core ML models (large files)
+*.mlmodel
+*.mlpackage
+*.mlmodelc
+
+# Claude Code
+.claude/
+
+# Working docs (not for public repo)
+AUDIT.md
+COMMITS.md
+IMPLEMENTATION.md
+PROGRESO.md
+SCREENS.md
+files.zip
+
+# Misc
+*.swp
+*~
