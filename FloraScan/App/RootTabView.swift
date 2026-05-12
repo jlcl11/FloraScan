@@ -22,7 +22,7 @@ struct RootTabView: View {
             Tab("My garden", systemImage: "leaf.fill") {
                 NavigationStack { GardenView() }
             }
-            Tab("Today", systemImage: "calendar", value: "today") {
+            Tab("Today", systemImage: "calendar") {
                 NavigationStack { TodayView() }
             }
             .badge(todayBadge > 0 ? todayBadge : 0)
