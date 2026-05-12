@@ -146,23 +146,6 @@ Get keys for free: [Pl@ntNet](https://my.plantnet.org) (500 ids/day) · [Perenua
 
 ---
 
-## Roadmap
-
-- [x] Hybrid identification (API + Core ML in parallel)
-- [x] Garden with hero zoom transitions
-- [x] Care scheduling with seasonal modifiers
-- [x] Local notifications with quick actions
-- [x] Wikipedia + Perenual enrichment (30-day cache)
-- [x] Garden export/import
-- [x] Onboarding with animated MeshGradient
-- [ ] PlantNet-300K Core ML model (1,081 species, ~22MB)
-- [ ] WidgetKit — today's care tasks on the home screen
-- [ ] App Intents for Siri
-- [ ] CoreSpotlight indexing
-- [ ] CloudKit sync
-
----
-
 ## Attribution
 
 [Pl@ntNet](https://plantnet.org) · [Perenual](https://perenual.com) · [Wikipedia REST API](https://en.wikipedia.org/api/rest_v1/)
