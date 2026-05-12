@@ -21,7 +21,8 @@ struct FloraScanApp: App {
             container = try SharedModelContainer.create()
         } catch {
             Logger.persistence.error("ModelContainer init failed: \(error.localizedDescription). Attempting recovery.")
-            // Delete corrupt store and retry — use the shared container factory
+            // Delete corrupt store and retry
+            try? FileManager.default.removeItem(at: SharedModelContainer.storeURL)
             do {
                 container = try SharedModelContainer.create()
                 Logger.persistence.warning("Recovered with fresh database — user data was lost.")

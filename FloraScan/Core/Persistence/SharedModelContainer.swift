@@ -13,9 +13,12 @@ import SwiftData
 enum SharedModelContainer {
     static let appGroupID = "group.io.jlcl11.florascan"
 
+    static var storeURL: URL {
+        containerURL.appendingPathComponent("FloraScan.store")
+    }
+
     static func create() throws -> ModelContainer {
         let schema = Schema(versionedSchema: FloraScanSchemaV1.self)
-        let storeURL = containerURL.appendingPathComponent("FloraScan.store")
         let config = ModelConfiguration("FloraScan", schema: schema, url: storeURL)
         return try ModelContainer(
             for: schema,
