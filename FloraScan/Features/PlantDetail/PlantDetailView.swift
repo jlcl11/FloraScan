@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct PlantDetailView: View {
     @Environment(\.modelContext) private var context
@@ -344,6 +345,7 @@ struct PlantDetailView: View {
             try? await Task.sleep(for: .seconds(1))
             showActionFeedback = nil
         }
+        WidgetCenter.shared.reloadTimelines(ofKind: "CareTaskWidget")
     }
 }
 

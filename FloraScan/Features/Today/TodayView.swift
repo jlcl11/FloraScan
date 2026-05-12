@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct TodayView: View {
     @Environment(\.modelContext) private var context
@@ -249,6 +250,7 @@ struct TodayView: View {
         Task {
             await CareReminderScheduler.schedule(task: task)
         }
+        WidgetCenter.shared.reloadTimelines(ofKind: "CareTaskWidget")
     }
 }
 

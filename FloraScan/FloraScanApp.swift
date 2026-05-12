@@ -17,24 +17,13 @@ struct FloraScanApp: App {
 
     init() {
         let container: ModelContainer
-        let schema = Schema(versionedSchema: FloraScanSchemaV1.self)
-        let config = ModelConfiguration("FloraScan", schema: schema)
         do {
-            container = try ModelContainer(
-                for: schema,
-                migrationPlan: FloraScanMigrationPlan.self,
-                configurations: [config]
-            )
+            container = try SharedModelContainer.create()
         } catch {
             Logger.persistence.error("ModelContainer init failed: \(error.localizedDescription). Attempting recovery.")
-            // Delete corrupt store and retry
-            try? FileManager.default.removeItem(at: config.url)
+            // Delete corrupt store and retry — use the shared container factory
             do {
-                container = try ModelContainer(
-                    for: schema,
-                    migrationPlan: FloraScanMigrationPlan.self,
-                    configurations: [config]
-                )
+                container = try SharedModelContainer.create()
                 Logger.persistence.warning("Recovered with fresh database — user data was lost.")
             } catch {
                 fatalError("Cannot create ModelContainer after recovery: \(error)")
