@@ -82,7 +82,7 @@ struct EditPlantSheet: View {
                 Spacer()
                 PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
                     ZStack(alignment: .bottomTrailing) {
-                        let fileName = (plant.photos.first(where: \.isPrimary) ?? plant.photos.first)?.fileName
+                        let fileName = plant.photos.first { $0.isPrimary }?.fileName ?? plant.photos.first?.fileName
                         AsyncPlantImage(fileName: fileName)
                             .frame(width: 100, height: 100)
                             .clipShape(.rect(cornerRadius: Radius.cardSmall))
