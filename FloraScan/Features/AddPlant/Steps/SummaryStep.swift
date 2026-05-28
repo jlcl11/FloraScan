@@ -151,24 +151,24 @@ struct SummaryStepView: View {
                 .background(color.opacity(0.13), in: .rect(cornerRadius: 12))
 
             VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
-                    Text(label)
-                        .font(.fsHeadline)
-                    Stepper(value: value, in: range) { EmptyView() }
-                        .labelsHidden()
-                    Text("\(value.wrappedValue) \(unit)")
-                        .font(.fsHeadline)
-                        .monospacedDigit()
-                        .foregroundStyle(color)
-                        .contentTransition(.numericText())
-                        .animation(.smooth, value: value.wrappedValue)
-                }
+                Text(label)
+                    .font(.fsHeadline)
                 Text(subtitle)
                     .font(.fsFootnote)
                     .foregroundStyle(Palette.Dynamic.textTertiary)
             }
 
             Spacer()
+
+            Text("\(value.wrappedValue) \(unit)")
+                .font(.fsHeadline)
+                .monospacedDigit()
+                .foregroundStyle(color)
+                .contentTransition(.numericText())
+                .animation(.smooth, value: value.wrappedValue)
+
+            Stepper(value: value, in: range) { EmptyView() }
+                .labelsHidden()
         }
         .padding(Spacing.s4)
         .background(Palette.Dynamic.surfaceCard, in: .rect(cornerRadius: Radius.cardMedium))
