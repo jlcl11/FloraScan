@@ -19,58 +19,51 @@
 </p>
 
 <!--
-  TODO: Add screenshots here for maximum impact.
-  Recommended: 3 iPhone mockups side by side (Identify, Garden, Detail)
-
-  <p align="center">
-    <img src="docs/screenshots/identify.png" width="250">
-    <img src="docs/screenshots/garden.png" width="250">
-    <img src="docs/screenshots/detail.png" width="250">
-  </p>
+<p align="center">
+  <img src="docs/screenshots/identify.png" width="250">
+  <img src="docs/screenshots/garden.png" width="250">
+  <img src="docs/screenshots/detail.png" width="250">
+</p>
 -->
 
 ---
 
-## Why FloraScan
+## What is FloraScan
 
-Apps like Greg, Planta, or PictureThis are cross-platform products with generic UIs.
+FloraScan is a native iOS 26 plant identification and care management app. Snap a photo of any plant and get an instant identification powered by a hybrid engine that races an on-device Core ML model against the Pl@ntNet API (78,225+ species). Build your personal garden inventory, track watering and care schedules, and get smart reminders that adapt to the season and light conditions.
 
-FloraScan is **built exclusively for iOS 26** — not adapted, not ported, not wrapped.
-
-Every screen uses the new design language: Liquid Glass floating controls over full-bleed camera feeds, animated MeshGradient backgrounds that breathe, cinematic zoom transitions between cards and detail views, and SF Symbols 7 with draw-on animations. This isn't a plant app with iOS polish — it's an iOS 26 showcase that happens to identify plants.
+Built from scratch with SwiftUI, Liquid Glass, and strict Swift 6.2 concurrency. No third-party dependencies. No subscriptions. No tracking.
 
 ---
 
-## At a Glance
-
-```
-80 Swift files  ·  ~7,000 lines  ·  0 third-party dependencies  ·  0 Combine imports
-```
+## Features
 
 | | |
 |---|---|
-| **Identify** | Hybrid engine: Pl@ntNet API (78,225 species) races against a Core ML model on-device. Local result appears instantly (~30ms), API upgrades it if better (~2s). Works offline. |
-| **Garden** | 2-column grid with health rings, search, context menus. Tap any card for a cinematic zoom into the full detail view. Export your entire garden as a `.florascan` file or share as image. |
-| **Care** | Smart scheduler adjusts watering intervals by season (summer -30%, winter +40%) and light level. Local notifications at 8:30 AM with one-tap actions: Done or Tomorrow. |
-| **Design** | 30-token semantic palette, 14 typography styles, 4-level elevation system. Full dark mode. WCAG AA contrast verified. VoiceOver, Dynamic Type, Reduce Transparency — all supported. |
+| **Identify** | Hybrid engine: Pl@ntNet API races against a Core ML model on-device. Local result appears instantly (~30ms), API upgrades it if better (~2s). Works offline with the local model. |
+| **Garden** | 2-column grid with health rings, search, and context menus. Tap any card for a cinematic zoom transition into the full detail view. |
+| **Care** | Smart scheduler adjusts watering intervals by season (summer -30%, winter +40%) and light level. Local notifications at 8:30 AM with one-tap actions. |
+| **Share** | Export your entire garden as a `.florascan` file or share as an image snapshot. Import gardens from other users. |
+| **Widget** | WidgetKit extension shows today's pending care tasks on the home screen (small and medium sizes). |
+| **Design** | 30-token semantic color palette with full dark mode. WCAG AA contrast verified. VoiceOver, Dynamic Type, and Reduce Transparency supported. |
 
 ---
 
-## The Identification Pipeline
+## How Identification Works
 
 ```
-                   ┌──────────────────────┐
-   Camera ────────►│  Pl@ntNet API        │──► 78,225 species
-   capture         │  (async, ~2s)        │    score > 0.4 wins
-                   └──────────────────────┘
-        │                                        │
-        │          ┌──────────────────────┐       ▼
-        └─────────►│  Core ML on-device   │──► chooseBestGuess()
-                   │  (sync, ~30ms)       │    merges both results
-                   └──────────────────────┘
+                   +----------------------+
+   Camera --------+|  Pl@ntNet API        |---> 78,225 species
+   capture         |  (async, ~2s)        |    score > 0.4 wins
+                   +----------------------+
+        |                                        |
+        |          +----------------------+      v
+        +--------->|  Core ML on-device   |---> chooseBestGuess()
+                   |  (sync, ~30ms)       |    merges both results
+                   +----------------------+
 ```
 
-Both engines fire in parallel. The user sees the local result immediately. If the API returns a higher-confidence match, it upgrades seamlessly — no spinner, no wait.
+Both engines fire in parallel. The user sees the local result immediately. If the API returns a higher-confidence match, it upgrades seamlessly.
 
 ---
 
@@ -78,29 +71,28 @@ Both engines fire in parallel. The user sees the local result immediately. If th
 
 ```
 FloraScan/
-├── App/                    Design tokens, DI container, tab bar
-├── Core/
-│   ├── Camera/             AVCaptureSession actor + preview bridge
-│   ├── ML/                 PlantClassifier actor, protocols
-│   ├── Networking/         PlantNet · Perenual · Wikipedia clients
-│   ├── Models/             Plant · PlantPhoto · CareTask (@Model)
-│   ├── Scheduling/         Seasonal + light-adjusted care intervals
-│   ├── Notifications/      Local notifications with custom actions
-│   ├── Persistence/        ImageStore with LRU cache + schema migrations
-│   ├── Sharing/            Codable export/import with validation
-│   └── UI/                 HealthRing · AsyncPlantImage · MeshGradient
-└── Features/
-    ├── Identify/           Camera + hybrid classification pipeline
-    ├── Garden/             Grid · search · hero zoom transitions
-    ├── Today/              Grouped tasks · swipe-to-complete · badge
-    ├── PlantDetail/        Hero photo · care grid · notes · edit
-    ├── AddPlant/           3-step flow with auto-identify + confetti
-    ├── Onboarding/         3 pages over animated MeshGradient
-    ├── Share/              Export as .florascan or image
-    └── Settings/           Attribution · data management
+  App/                    Design tokens, DI container, tab bar
+  Core/
+    Camera/             AVCaptureSession + UIViewRepresentable bridge
+    ML/                 PlantClassifier actor + Vision framework
+    Networking/         PlantNet, Perenual, Wikipedia clients
+    Models/             Plant, PlantPhoto, CareTask (SwiftData)
+    Scheduling/         Seasonal + light-adjusted care intervals
+    Notifications/      Local notifications with custom actions
+    Persistence/        ImageStore (LRU cache) + schema migrations
+    Sharing/            Codable export/import with validation
+  Features/
+    Identify/           Camera + hybrid classification pipeline
+    Garden/             Grid, search, hero zoom transitions
+    PlantDetail/        Hero photo, care cards, notes, edit
+    AddPlant/           3-step flow with auto-identify
+    Today/              Grouped tasks, swipe-to-complete
+    Onboarding/         3 pages over animated MeshGradient
+    Share/              Export as .florascan or image
+    Settings/           Attribution, data management
 ```
 
-**Strict concurrency throughout.** `actor` for camera, classifier, and network clients. `@MainActor @Observable` for every ViewModel. Protocol-based DI for testability. Zero `DispatchQueue.main.async` calls.
+Strict concurrency throughout: `actor` for camera, classifier, and network clients. `@MainActor @Observable` for every ViewModel. Protocol-based dependency injection for testability.
 
 ---
 
@@ -114,44 +106,34 @@ cd FloraScan
 open FloraScan.xcodeproj
 ```
 
-Create `FloraScan/Resources/Secrets.plist` with your free API keys:
+The app includes a free-tier Pl@ntNet API key and the Core ML model out of the box. Just build and run.
 
-```xml
-<dict>
-    <key>PlantNetAPIKey</key>
-    <string>YOUR_KEY</string>
-    <key>PerenualAPIKey</key>
-    <string>YOUR_KEY</string>
-</dict>
-```
-
-Get keys for free: [Pl@ntNet](https://my.plantnet.org) (500 ids/day) · [Perenual](https://perenual.com) (100 queries/day)
-
-> Without API keys the app still works — the Core ML model handles identification offline.
+> To use your own API keys, edit `FloraScan/Resources/Secrets.plist` or copy `Secrets.plist.template` as a starting point. Get keys for free at [Pl@ntNet](https://my.plantnet.org) (500 ids/day) and [Perenual](https://perenual.com) (100 queries/day).
 
 ---
 
-## Built With
+## Tech Stack
 
-| | Technology | Why |
-|---|---|---|
-| **Language** | Swift 6.2 | Strict concurrency, `MainActor` default isolation |
-| **UI** | SwiftUI + Liquid Glass | Native iOS 26 materials, no UIKit (except camera bridge) |
-| **Data** | SwiftData | Versioned schema with migration plan |
-| **ML** | Core ML 9.0 + Vision | On-device classification in ~30ms |
-| **Camera** | AVFoundation | Full capture pipeline with photo + video output |
-| **Notifications** | UserNotifications | Local, with custom action categories |
-| **Network** | URLSession async/await | No Alamofire, no Combine |
-| **Tests** | Swift Testing | `@Test` + `#expect`, not XCTest |
+| Technology | Role |
+|---|---|
+| **Swift 6.2** | Strict concurrency with MainActor default isolation |
+| **SwiftUI + Liquid Glass** | Native iOS 26 design language |
+| **SwiftData** | Versioned schema with migration plan |
+| **Core ML 9.0 + Vision** | On-device plant classification (~30ms) |
+| **AVFoundation** | Camera capture pipeline with photo + video output |
+| **UserNotifications** | Local reminders with custom action categories |
+| **URLSession** | Async/await networking (no third-party deps) |
+| **WidgetKit** | Home screen widget for today's care tasks |
+| **Swift Testing** | @Test + #expect (no XCTest) |
 
 ---
 
 ## Attribution
 
-[Pl@ntNet](https://plantnet.org) · [Perenual](https://perenual.com) · [Wikipedia REST API](https://en.wikipedia.org/api/rest_v1/)
+[Pl@ntNet](https://plantnet.org) | [Perenual](https://perenual.com) | [Wikipedia REST API](https://en.wikipedia.org/api/rest_v1/)
 
 ---
 
 <p align="center">
-  <sub>MIT License · Built by <a href="https://github.com/jlcl11">Jose Luis Corral Lopez</a></sub>
+  MIT License - Built by <a href="https://github.com/jlcl11">Jose Luis Corral Lopez</a>
 </p>
