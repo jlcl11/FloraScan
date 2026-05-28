@@ -107,6 +107,7 @@ struct SummaryStepView: View {
                 }
             }
             .padding(.horizontal, Spacing.s5)
+            .padding(.vertical, Spacing.s6)
         }
     }
 
